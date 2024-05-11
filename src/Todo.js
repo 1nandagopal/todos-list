@@ -10,12 +10,12 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import EditIcon from "@mui/icons-material/Edit";
 import { useToggleState } from "./hooks/useToggleState";
 import EditTodoForm from "./EditTodoForm";
-import { TodosContext } from "./contexts/todos.context";
+import { TodosDispatchContext } from "./contexts/todos.context";
 
 export default function Todo({ id, task, completed }) {
   const [isEditing, toggleEditting] = useToggleState(false);
 
-  const { dispatch } = useContext(TodosContext);
+  const dispatch = useContext(TodosDispatchContext);
 
   return (
     <ListItem style={{ height: "64px" }}>

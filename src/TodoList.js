@@ -1,10 +1,10 @@
 import React, { useContext } from "react";
 import { List, Paper, Divider } from "@mui/material";
 import Todo from "./Todo";
-import { TodosContext } from "./contexts/todos.context";
+import { TodosStateContext } from "./contexts/todos.context";
 
 export default function TodoList() {
-  const { todos } = useContext(TodosContext);
+  const todos = useContext(TodosStateContext);
 
   return (
     <Paper>
