@@ -1,41 +1,37 @@
-import React, { createContext } from "react";
-import { useLocalStorageState } from "../hooks/useLocalStorageState";
+import React, { createContext, useReducer } from "react";
 import { v4 } from "uuid";
 
 export const TodosContext = createContext();
 
+function todoReducer(state, action) {
+  switch (action.type) {
+    case "ADD":
+      return [
+        ...state,
+        { id: v4(), task: action.newTodoText, completed: false },
+      ];
+    case "REMOVE":
+      return state.filter((todo) => todo.id !== action.id);
+    case "TOGGLE":
+      return state.map((todo) =>
+        todo.id === action.id ? { ...todo, completed: !todo.completed } : todo
+      );
+    case "EDIT":
+      return state.map((todo) =>
+        todo.id === action.id ? { ...todo, task: action.newTodoText } : todo
+      );
+    default:
+      return state;
+  }
+}
+
 export function TodosProvidor(props) {
   const initialTodos = [{ id: 1, task: "Walk The Goldfish", completed: true }];
 
-  const [todos, setTodos] = useLocalStorageState("todos", initialTodos);
-
-  function addTodo(newTodoText) {
-    setTodos([...todos, { id: v4(), task: newTodoText, completed: false }]);
-  }
-
-  function removeTodo(todoId) {
-    const updatedTodos = todos.filter((todo) => todo.id !== todoId);
-    setTodos(updatedTodos);
-  }
-
-  function toggleTodo(todoId) {
-    const updatedTodos = todos.map((todo) =>
-      todo.id === todoId ? { ...todo, completed: !todo.completed } : todo
-    );
-    setTodos(updatedTodos);
-  }
-
-  function editTodo(todoId, newTodoText) {
-    const updatedTodos = todos.map((todo) =>
-      todo.id === todoId ? { ...todo, task: newTodoText } : todo
-    );
-    setTodos(updatedTodos);
-  }
+  const [todos, dispatch] = useReducer(todoReducer, initialTodos);
 
   return (
-    <TodosContext.Provider
-      value={{ todos, addTodo, removeTodo, toggleTodo, editTodo }}
-    >
+    <TodosContext.Provider value={{ todos, dispatch }}>
       {props.children}
     </TodosContext.Provider>
   );
