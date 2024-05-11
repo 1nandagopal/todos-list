@@ -1,4 +1,4 @@
-import React, { useContext } from "react";
+import React, { memo, useContext } from "react";
 import {
   ListItem,
   Checkbox,
@@ -12,11 +12,12 @@ import { useToggleState } from "./hooks/useToggleState";
 import EditTodoForm from "./EditTodoForm";
 import { TodosDispatchContext } from "./contexts/todos.context";
 
-export default function Todo({ id, task, completed }) {
+function Todo({ id, task, completed }) {
   const [isEditing, toggleEditting] = useToggleState(false);
 
   const dispatch = useContext(TodosDispatchContext);
 
+  console.log("Todo render");
   return (
     <ListItem style={{ height: "64px" }}>
       {isEditing ? (
@@ -59,3 +60,5 @@ export default function Todo({ id, task, completed }) {
     </ListItem>
   );
 }
+
+export default memo(Todo);
